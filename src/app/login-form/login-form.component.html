@@ -1,1 +1,48 @@
-<p>login-form works!</p>
+<form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+  <h2>Connexion</h2>
+
+  <!-- Email -->
+  <div class="form-group">
+    <label for="email">Adresse email</label>
+    <input id="email" type="email" formControlName="email"
+      [class.invalid]="email?.invalid && (email?.touched || email?.dirty)" />
+
+    <small class="error" *ngIf="email?.touched || email?.dirty">
+      <span *ngIf="email?.errors?.['required']">
+        Email requis
+      </span>
+      <span *ngIf="email?.errors?.['email']">
+        Format d’email invalide
+      </span>
+    </small>
+  </div>
+
+  <!-- Password -->
+  <div class="form-group">
+    <label for="password">Mot de passe</label>
+    <input id="password" type="password" formControlName="password"
+      [class.invalid]="password?.invalid && (password?.touched || password?.dirty)" />
+
+    <small class="error" *ngIf="password?.touched || password?.dirty">
+      <span *ngIf="password?.errors?.['required']">
+        Mot de passe requis
+      </span>
+      <span *ngIf="password?.errors?.['minlength']">
+        Minimum {{ password?.errors?.['minlength']?.requiredLength }} caractères
+      </span>
+    </small>
+  </div>
+
+  <!-- Buttons -->
+  <div class="buttons">
+    <button type="button" class="cancel" (click)="onCancel()">
+      Annuler
+    </button>
+
+    <button type="submit" class="submit" [disabled]="loginForm.invalid">
+      Se connecter
+    </button>
+  </div>
+
+</form>
