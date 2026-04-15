@@ -1,59 +1,72 @@
-# AuthentificationTP
+# Angular Material Management App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
+## Project Overview
 
-## Development server
+This project is a modern Angular application built using Standalone Components, Reactive Forms, and a JSON Server as a mock backend.
 
-To start a local development server, run:
+It demonstrates:
+- Authentication system (login)
+- Route protection with guards
+- Lazy loading
+- Full CRUD operations on a "materials" resource
+- Clean and responsive UI
 
-```bash
-ng serve
-```
+---
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Tech Stack
 
-## Code scaffolding
+- Angular (Standalone Architecture)
+- Reactive Forms
+- Angular Router (Lazy Loading)
+- JSON Server (Mock API)
+- SweetAlert2 (UI feedback)
+- Custom CSS (responsive design)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
+## Authentication
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- Login form with validation (email and password)
+- Authentication simulated via JSON Server
+- User session stored in localStorage
+- Protected routes using AuthGuard
 
-```bash
-ng generate --help
-```
+---
 
-## Building
+## Features
 
-To build the project run:
+### Login
+- Reactive form validation
+- API call to JSON Server
+- Redirect to dashboard on success
 
-```bash
-ng build
-```
+### Dashboard
+- Display materials in a table
+- Responsive UI
+- Toggle visibility of the list
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### CRUD Operations
+- Create new material
+- Edit material via modal popup
+- Delete material with confirmation
+- Automatic refresh after each action
 
-## Running unit tests
+### UX Enhancements
+- Confirmation popups using SweetAlert2
+- Modal-based editing
+- Clean and modern interface
+- Responsive layout (mobile, tablet, desktop)
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+---
 
-```bash
-ng test
-```
+## Data Model
 
-## Running end-to-end tests
+Each material contains:
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```json
+{
+  "id": number,
+  "serialNumber": string,
+  "dateMiseEnService": string,
+  "dateFinGarantie": string
+}
