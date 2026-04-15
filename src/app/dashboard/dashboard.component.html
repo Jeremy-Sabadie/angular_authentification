@@ -1,1 +1,65 @@
-<p>dashboard works!</p>
+<div class="container">
+
+  <div class="header">
+    <h2>📦 Gestion des matériels</h2>
+
+    <button class="toggle-btn" (click)="toggleList()">
+      {{ showList ? 'Masquer la liste' : 'Afficher la liste' }}
+    </button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card" *ngIf="showList">
+    <table>
+      <thead>
+        <tr>
+          <th>Serial</th>
+          <th>Mise en service</th>
+          <th>Fin garantie</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let m of materiels">
+          <td>{{ m.serialNumber }}</td>
+          <td>{{ m.dateMiseEnService }}</td>
+          <td>{{ m.dateFinGarantie }}</td>
+
+          <td>
+            <button class="edit" (click)="openEditModal(m)">✏️</button>
+            <button class="delete" (click)="delete(m.id!)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal" *ngIf="showModal">
+    <div class="modal-content">
+
+      <h3>Modifier le matériel</h3>
+
+      <form [formGroup]="form" (ngSubmit)="submitEdit()">
+
+        <label>Numéro de série</label>
+        <input type="text" formControlName="serialNumber" />
+
+        <label>Date mise en service</label>
+        <input type="date" formControlName="dateMiseEnService" />
+
+        <label>Date fin garantie</label>
+        <input type="date" formControlName="dateFinGarantie" />
+
+        <div class="modal-actions">
+          <button type="submit" class="primary">Modifier</button>
+          <button type="button" class="secondary" (click)="closeModal()">Annuler</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>

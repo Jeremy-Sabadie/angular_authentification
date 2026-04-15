@@ -1,54 +1,121 @@
 {
+  "materiels": [
+    {
+      "id": "2",
+      "serialNumber": "SN-1002",
+      "dateMiseEnService": "2021-06-15",
+      "dateFinGarantie": "2024-06-15"
+    },
+    {
+      "id": "3",
+      "serialNumber": "SN-1003",
+      "dateMiseEnService": "2023-03-20",
+      "dateFinGarantie": "2026-03-20"
+    },
+    {
+      "id": "4",
+      "serialNumber": "SN-1004",
+      "dateMiseEnService": "2020-11-05",
+      "dateFinGarantie": "2023-11-05"
+    },
+    {
+      "id": "5",
+      "serialNumber": "SN-1005",
+      "dateMiseEnService": "2022-09-12",
+      "dateFinGarantie": "2025-09-12"
+    },
+    {
+      "id": "6",
+      "serialNumber": "SN-1006",
+      "dateMiseEnService": "2021-02-28",
+      "dateFinGarantie": "2024-02-28"
+    },
+    {
+      "id": "7",
+      "serialNumber": "SN-1007",
+      "dateMiseEnService": "2023-07-01",
+      "dateFinGarantie": "2026-07-01"
+    },
+    {
+      "id": "8",
+      "serialNumber": "SN-1008",
+      "dateMiseEnService": "2020-04-18",
+      "dateFinGarantie": "2023-04-18"
+    },
+    {
+      "id": "9",
+      "serialNumber": "SN-1009",
+      "dateMiseEnService": "2022-12-01",
+      "dateFinGarantie": "2025-12-01"
+    },
+    {
+      "id": "10",
+      "serialNumber": "SN-1010",
+      "dateMiseEnService": "2021-08-22",
+      "dateFinGarantie": "2024-08-22"
+    }
+  ],
   "users": [
     {
       "email": "user1@example.com",
       "password": "pass1234",
-      "token": "tok_1a2b3c4d"
+      "token": "tok_1a2b3c4d",
+      "id": "Was4AaYJYXE"
     },
     {
       "email": "user2@example.com",
       "password": "pass2345",
-      "token": "tok_2b3c4d5e"
+      "token": "tok_2b3c4d5e",
+      "id": "RuemJGblbms"
     },
     {
       "email": "user3@example.com",
       "password": "pass3456",
-      "token": "tok_3c4d5e6f"
+      "token": "tok_3c4d5e6f",
+      "id": "NVHaQO86t80"
     },
     {
       "email": "user4@example.com",
       "password": "pass4567",
-      "token": "tok_4d5e6f7g"
+      "token": "tok_4d5e6f7g",
+      "id": "zK4twKuwmjY"
     },
     {
       "email": "user5@example.com",
       "password": "pass5678",
-      "token": "tok_5e6f7g8h"
+      "token": "tok_5e6f7g8h",
+      "id": "wILBW1pK7lY"
     },
     {
       "email": "user6@example.com",
       "password": "pass6789",
-      "token": "tok_6f7g8h9i"
+      "token": "tok_6f7g8h9i",
+      "id": "WjlukDVzMYs"
     },
     {
       "email": "user7@example.com",
       "password": "pass7890",
-      "token": "tok_7g8h9i0j"
+      "token": "tok_7g8h9i0j",
+      "id": "NiP6TKf3qGQ"
     },
     {
       "email": "user8@example.com",
       "password": "pass8901",
-      "token": "tok_8h9i0j1k"
+      "token": "tok_8h9i0j1k",
+      "id": "JfL7FU2ayRI"
     },
     {
       "email": "user9@example.com",
       "password": "pass9012",
-      "token": "tok_9i0j1k2l"
+      "token": "tok_9i0j1k2l",
+      "id": "sXc33Tuj9ek"
     },
     {
       "email": "user10@example.com",
       "password": "pass0123",
-      "token": "tok_0j1k2l3m"
+      "token": "tok_0j1k2l3m",
+      "id": "EIsWY5NXddM"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
