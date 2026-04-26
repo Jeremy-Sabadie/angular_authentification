@@ -8,8 +8,37 @@
     </button>
   </div>
 
+  <!-- ========================= -->
+  <!-- CREATE FORM -->
+  <!-- ========================= -->
+  <div class="card form-card">
+
+    <h3>Ajouter un matériel</h3>
+
+    <form [formGroup]="form" (ngSubmit)="submitCreate()">
+
+      <label>Numéro de série</label>
+      <input type="text" formControlName="serialNumber" />
+
+      <label>Date de mise en service</label>
+      <input type="date" formControlName="dateMiseEnService" />
+
+      <label>Date de fin de garantie</label>
+      <input type="date" formControlName="dateFinGarantie" />
+
+      <button type="submit" class="primary" [disabled]="form.invalid">
+        Ajouter
+      </button>
+
+    </form>
+
+  </div>
+
+  <!-- ========================= -->
   <!-- TABLE -->
+  <!-- ========================= -->
   <div class="card" *ngIf="showList">
+
     <table>
       <thead>
         <tr>
@@ -32,11 +61,16 @@
           </td>
         </tr>
       </tbody>
+
     </table>
+
   </div>
 
-  <!-- MODAL -->
+  <!-- ========================= -->
+  <!-- MODAL EDIT -->
+  <!-- ========================= -->
   <div class="modal" *ngIf="showModal">
+
     <div class="modal-content">
 
       <h3>Modifier le matériel</h3>
@@ -60,6 +94,7 @@
       </form>
 
     </div>
+
   </div>
 
 </div>

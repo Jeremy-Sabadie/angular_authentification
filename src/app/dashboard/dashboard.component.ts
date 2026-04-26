@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit {
 
   showList = true;
 
-  // gestion popup
+  // modal edit
   showModal = false;
   currentId: number | null = null;
 
@@ -31,6 +31,7 @@ export class DashboardComponent implements OnInit {
     private service: MaterielsService,
     private fb: FormBuilder,
   ) {
+    // formulaire unique utilisé pour CREATE + EDIT
     this.form = this.fb.group({
       serialNumber: ['', Validators.required],
       dateMiseEnService: ['', Validators.required],
@@ -42,6 +43,9 @@ export class DashboardComponent implements OnInit {
     this.loadMateriels();
   }
 
+  // =========================
+  // LIST
+  // =========================
   toggleList() {
     this.showList = !this.showList;
   }
@@ -52,21 +56,43 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // OUVRIR MODAL
+  // =========================
+  // CREATE
+  // =========================
+  submitCreate() {
+    if (this.form.invalid) return;
+
+    this.service.create(this.form.value).subscribe(() => {
+      this.loadMateriels();
+
+      this.form.reset();
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Matériel ajouté',
+        timer: 1200,
+        showConfirmButton: false,
+      });
+    });
+  }
+
+  // =========================
+  // EDIT (MODAL)
+  // =========================
   openEditModal(m: Materiel) {
     this.currentId = m.id ?? null;
+
     this.form.patchValue(m);
+
     this.showModal = true;
   }
 
-  // FERMER MODAL
   closeModal() {
     this.showModal = false;
     this.form.reset();
     this.currentId = null;
   }
 
-  // UPDATE
   submitEdit() {
     if (this.form.invalid || this.currentId === null) return;
 
@@ -83,7 +109,7 @@ export class DashboardComponent implements OnInit {
 
           Swal.fire({
             icon: 'success',
-            title: 'Modifié',
+            title: 'Matériel modifié',
             timer: 1200,
             showConfirmButton: false,
           });
@@ -92,10 +118,13 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  // =========================
   // DELETE
+  // =========================
   delete(id: number) {
     Swal.fire({
-      title: 'Supprimer ?',
+      title: 'Supprimer ce matériel ?',
+      text: 'Cette action est irréversible',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Oui',
@@ -103,6 +132,13 @@ export class DashboardComponent implements OnInit {
       if (result.isConfirmed) {
         this.service.delete(id).subscribe(() => {
           this.loadMateriels();
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Supprimé',
+            timer: 1200,
+            showConfirmButton: false,
+          });
         });
       }
     });

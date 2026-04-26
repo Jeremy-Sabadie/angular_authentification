@@ -1,12 +1,6 @@
 {
   "materiels": [
     {
-      "id": "2",
-      "serialNumber": "SN-1002",
-      "dateMiseEnService": "2021-06-15",
-      "dateFinGarantie": "2024-06-15"
-    },
-    {
       "id": "3",
       "serialNumber": "SN-1003",
       "dateMiseEnService": "2023-03-20",
@@ -53,6 +47,18 @@
       "serialNumber": "SN-1010",
       "dateMiseEnService": "2021-08-22",
       "dateFinGarantie": "2024-08-22"
+    },
+    {
+      "serialNumber": "SN-10069",
+      "dateMiseEnService": "2026-04-26",
+      "dateFinGarantie": "2026-04-29",
+      "id": "Tz0uARmrkoQ"
+    },
+    {
+      "serialNumber": "SN-69",
+      "dateMiseEnService": "2026-04-26",
+      "dateFinGarantie": "2026-04-30",
+      "id": "s9XHYdGNjVU"
     }
   ],
   "users": [
