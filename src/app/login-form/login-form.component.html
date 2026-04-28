@@ -1,48 +1,63 @@
 <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-
   <h2>Connexion</h2>
 
-  <!-- Email -->
+  <!-- EMAIL -->
   <div class="form-group">
     <label for="email">Adresse email</label>
-    <input id="email" type="email" formControlName="email"
-      [class.invalid]="email?.invalid && (email?.touched || email?.dirty)" />
 
-    <small class="error" *ngIf="email?.touched || email?.dirty">
+    <input id="email" type="email" formControlName="email" [class.invalid]="email?.invalid && email?.touched" />
+
+    <small class="error" *ngIf="email?.invalid && email?.touched">
+
       <span *ngIf="email?.errors?.['required']">
         Email requis
       </span>
+
       <span *ngIf="email?.errors?.['email']">
-        Format d’email invalide
+        Format invalide
       </span>
+
     </small>
   </div>
 
-  <!-- Password -->
+  <!-- PASSWORD -->
   <div class="form-group">
     <label for="password">Mot de passe</label>
-    <input id="password" type="password" formControlName="password"
-      [class.invalid]="password?.invalid && (password?.touched || password?.dirty)" />
 
-    <small class="error" *ngIf="password?.touched || password?.dirty">
+    <div class="password-wrapper">
+
+      <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
+        [class.invalid]="password?.invalid && password?.touched" />
+
+      <button type="button" class="eye-btn" (click)="showPassword = !showPassword">
+        {{ showPassword ? '🙈' : '👁️' }}
+      </button>
+
+    </div>
+
+    <small class="error" *ngIf="password?.invalid && password?.touched">
+
       <span *ngIf="password?.errors?.['required']">
         Mot de passe requis
       </span>
+
       <span *ngIf="password?.errors?.['minlength']">
-        Minimum {{ password?.errors?.['minlength']?.requiredLength }} caractères
+        Minimum 6 caractères
       </span>
+
     </small>
   </div>
 
-  <!-- Buttons -->
+  <!-- ACTIONS -->
   <div class="buttons">
+
     <button type="button" class="cancel" (click)="onCancel()">
       Annuler
     </button>
 
-    <button type="submit" class="submit" [disabled]="loginForm.invalid">
-      Se connecter
+    <button type="submit" class="submit" [disabled]="isLoading">
+      {{ isLoading ? 'Connexion...' : 'Se connecter' }}
     </button>
-  </div>
 
+  </div>
 </form>

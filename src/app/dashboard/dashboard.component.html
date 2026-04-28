@@ -1,43 +1,57 @@
 <div class="container">
 
-  <div class="header">
-    <h2>📦 Gestion des matériels</h2>
+  <!-- HEADER -->
+  <div class="topbar">
+    <div>
+      <h2>Gestion des matériels</h2>
+      <p>Ajoutez, modifiez et supprimez les équipements</p>
+    </div>
 
     <button class="toggle-btn" (click)="toggleList()">
       {{ showList ? 'Masquer la liste' : 'Afficher la liste' }}
     </button>
   </div>
 
-  <!-- ========================= -->
-  <!-- CREATE FORM -->
-  <!-- ========================= -->
-  <div class="card form-card">
+  <!-- FORMULAIRE AJOUT -->
+  <div class="create-card">
 
-    <h3>Ajouter un matériel</h3>
+    <div class="card-title">
+      <h3>Ajouter un matériel</h3>
+      <span>Nouveau matériel</span>
+    </div>
 
     <form [formGroup]="form" (ngSubmit)="submitCreate()">
 
-      <label>Numéro de série</label>
-      <input type="text" formControlName="serialNumber" />
+      <div class="grid">
 
-      <label>Date de mise en service</label>
-      <input type="date" formControlName="dateMiseEnService" />
+        <div class="field">
+          <label>Numéro de série</label>
+          <input type="text" formControlName="serialNumber" placeholder="Ex : SN-2026-001" />
+        </div>
 
-      <label>Date de fin de garantie</label>
-      <input type="date" formControlName="dateFinGarantie" />
+        <div class="field">
+          <label>Date mise en service</label>
+          <input type="date" formControlName="dateMiseEnService" />
+        </div>
 
-      <button type="submit" class="primary" [disabled]="form.invalid">
-        Ajouter
-      </button>
+        <div class="field">
+          <label>Date fin garantie</label>
+          <input type="date" formControlName="dateFinGarantie" />
+        </div>
+
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="add-btn" [disabled]="form.invalid">
+          Ajouter le matériel
+        </button>
+      </div>
 
     </form>
-
   </div>
 
-  <!-- ========================= -->
-  <!-- TABLE -->
-  <!-- ========================= -->
-  <div class="card" *ngIf="showList">
+  <!-- TABLEAU -->
+  <div class="table-card" *ngIf="showList">
 
     <table>
       <thead>
@@ -55,40 +69,45 @@
           <td>{{ m.dateMiseEnService }}</td>
           <td>{{ m.dateFinGarantie }}</td>
 
-          <td>
-            <button class="edit" (click)="openEditModal(m)">✏️</button>
-            <button class="delete" (click)="delete(m.id!)">🗑️</button>
+          <td class="btns">
+            <button class="edit" (click)="openEditModal(m)">Modifier</button>
+            <button class="delete" (click)="delete(m.id!)">Supprimer</button>
           </td>
         </tr>
       </tbody>
-
     </table>
 
   </div>
 
-  <!-- ========================= -->
-  <!-- MODAL EDIT -->
-  <!-- ========================= -->
+  <!-- MODAL MODIFICATION -->
   <div class="modal" *ngIf="showModal">
 
-    <div class="modal-content">
+    <div class="modal-box">
 
       <h3>Modifier le matériel</h3>
 
       <form [formGroup]="form" (ngSubmit)="submitEdit()">
 
-        <label>Numéro de série</label>
-        <input type="text" formControlName="serialNumber" />
+        <div class="field">
+          <label>Numéro de série</label>
+          <input type="text" formControlName="serialNumber" />
+        </div>
 
-        <label>Date mise en service</label>
-        <input type="date" formControlName="dateMiseEnService" />
+        <div class="field">
+          <label>Date mise en service</label>
+          <input type="date" formControlName="dateMiseEnService" />
+        </div>
 
-        <label>Date fin garantie</label>
-        <input type="date" formControlName="dateFinGarantie" />
+        <div class="field">
+          <label>Date fin garantie</label>
+          <input type="date" formControlName="dateFinGarantie" />
+        </div>
 
         <div class="modal-actions">
-          <button type="submit" class="primary">Modifier</button>
-          <button type="button" class="secondary" (click)="closeModal()">Annuler</button>
+          <button type="submit" class="save">Enregistrer</button>
+          <button type="button" class="cancel" (click)="closeModal()">
+            Annuler
+          </button>
         </div>
 
       </form>

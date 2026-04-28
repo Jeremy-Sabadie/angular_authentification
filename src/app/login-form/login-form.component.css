@@ -1,80 +1,135 @@
+:host {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #eef2f7, #dfe8f5);
+  padding: 20px;
+}
+
 .login-form {
-  max-width: 480px;
-  margin: 4rem auto;
-  padding: 2rem;
+  width: 100%;
+  max-width: 420px;
   background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-  font-family: system-ui, sans-serif;
+  border-radius: 14px;
+  padding: 32px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
 }
 
 .login-form h2 {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 28px;
+  color: #1f2937;
 }
 
 .form-group {
-  margin-bottom: 1.2rem;
+  margin-bottom: 18px;
 }
 
-label {
+.form-group label {
   display: block;
-  margin-bottom: 0.4rem;
-  font-weight: 500;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #374151;
 }
 
-input {
+.form-group input {
   width: 100%;
-  padding: 0.7rem 0.9rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-input:focus {
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
   outline: none;
-  border-color: #3f51b5;
-  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.15);
+  transition: 0.2s;
+  font-size: 15px;
+  box-sizing: border-box;
 }
 
-input.invalid {
-  border-color: #e53935;
+.form-group input:focus {
+  border-color: #2563eb;
+}
+
+.form-group input.invalid {
+  border-color: #dc2626;
 }
 
 .error {
-  color: #e53935;
-  font-size: 0.8rem;
-  margin-top: 0.3rem;
   display: block;
+  margin-top: 6px;
+  color: #dc2626;
+  font-size: 13px;
 }
 
+/* champ mdp avec oeil */
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 48px;
+}
+
+.eye-btn {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+}
+
+.eye-btn:hover {
+  opacity: 0.7;
+}
+
+/* boutons */
 .buttons {
   display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: 12px;
+  margin-top: 24px;
 }
 
-button {
+.buttons button {
   flex: 1;
-  padding: 0.75rem;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
   border: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
 }
 
-button.cancel {
-  background: #eeeeee;
-  color: #333;
+.cancel {
+  background: #e5e7eb;
 }
 
-button.submit {
-  background: #3f51b5;
+.cancel:hover {
+  background: #d1d5db;
+}
+
+.submit {
+  background: #2563eb;
   color: white;
 }
 
-button.submit:disabled {
-  background: #b0b7e2;
+.submit:hover {
+  background: #1d4ed8;
+}
+
+.submit:disabled {
+  background: #93c5fd;
   cursor: not-allowed;
+}
+
+/* responsive */
+@media (max-width: 480px) {
+  .login-form {
+    padding: 22px;
+  }
+
+  .buttons {
+    flex-direction: column;
+  }
 }
