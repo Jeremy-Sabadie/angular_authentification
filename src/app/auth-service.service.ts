@@ -6,8 +6,7 @@ import { Injectable, inject } from '@angular/core';
 })
 export class AuthServiceService {
   private http = inject(HttpClient);
-  private url = 'http://localhost:3000/users';
-
+  private url = 'http://host.docker.internal:3000/users';
   getConnexionElements(email: string, password: string) {
     return this.http.get(`${this.url}?email=${email}&password=${password}`);
   }
