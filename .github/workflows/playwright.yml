@@ -1,27 +1,47 @@
 name: Playwright Tests
+
 on:
   push:
-    branches: [ main, master ]
+    branches: [ "main", "master" ]
   pull_request:
-    branches: [ main, master ]
+
 jobs:
   test:
-    timeout-minutes: 60
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      # 👉 Build Angular
+      - name: Build Angular app
+        run: npm run build
+
+      # 👉 Install Playwright browsers
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      # 👉 Start JSON server (background)
+      - name: Start API (json-server)
+        run: npx json-server db.json --port 3000 &
+
+      # 👉 Start Angular (si tests e2e sur build local)
+      - name: Start Angular (preview)
+        run: npx http-server dist -p 4200 &
+
+      # 👉 Wait services
+      - name: Wait for services
+        run: sleep 10
+
+      # 👉 Run Playwright tests
+      - name: Run Playwright tests
+        run: npx playwright test
