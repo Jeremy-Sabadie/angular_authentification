@@ -2,7 +2,6 @@ name: Playwright Tests
 
 on:
   push:
-    branches: [ "main", "master" ]
   pull_request:
 
 jobs:
@@ -10,38 +9,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      # 1. Récupérer le code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2. Installer Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
+      # 3. Installer dépendances
       - name: Install dependencies
         run: npm install
 
-      # 👉 Build Angular
+      # 4. Installer navigateurs Playwright
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      # 5. Lancer JSON Server (API mock)
+      - name: Start JSON Server
+        run: npx json-server db.json --port 3000 &
+
+      # 6. Lancer Angular (build preview simple)
       - name: Build Angular app
         run: npm run build
 
-      # 👉 Install Playwright browsers
-      - name: Install Playwright
-        run: npx playwright install --with-deps
-
-      # 👉 Start JSON server (background)
-      - name: Start API (json-server)
-        run: npx json-server db.json --port 3000 &
-
-      # 👉 Start Angular (si tests e2e sur build local)
-      - name: Start Angular (preview)
+      - name: Serve Angular app
         run: npx http-server dist -p 4200 &
 
-      # 👉 Wait services
+      # 7. Attendre démarrage services
       - name: Wait for services
         run: sleep 10
 
-      # 👉 Run Playwright tests
+      # 8. Lancer tests Playwright
       - name: Run Playwright tests
         run: npx playwright test
+
+      # 9. Upload report (optionnel mais utile)
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
