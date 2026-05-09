@@ -1,4 +1,4 @@
-name: Docker CI Playwright
+name: Angular Docker Playwright CI
 
 on:
   push:
@@ -10,34 +10,51 @@ jobs:
 
     steps:
 
-      # 1. Code
+      # ======================
+      # 1. CODE
+      # ======================
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Docker build + start
-      - name: Build and start containers
+      # ======================
+      # 2. DOCKER BUILD + UP
+      # ======================
+      - name: Build and start services
         run: docker compose -f docker-compose.ci.yml up --build -d
 
-      # 3. Attente réelle Angular (IMPORTANT)
-      - name: Wait for Angular app
+      # ======================
+      # 3. WAIT FRONTEND READY
+      # ======================
+      - name: Wait for Angular frontend
         run: |
-          echo "Waiting for frontend..."
-          for i in {1..30}; do
-            curl -s http://localhost:4200 > /dev/null && echo "Frontend ready" && exit 0
+          echo "Waiting frontend..."
+          for i in {1..40}; do
+            curl -s http://localhost:4200 > /dev/null && echo "Frontend OK" && exit 0
             sleep 2
           done
-          echo "Frontend failed to start" && exit 1
+          echo "Frontend failed" && docker compose logs && exit 1
 
-      # 4. Logs si erreur (debug)
-      - name: Show container logs
-        if: failure()
-        run: docker compose -f docker-compose.ci.yml logs
+      # ======================
+      # 4. WAIT API READY
+      # ======================
+      - name: Wait for API
+        run: |
+          echo "Waiting API..."
+          for i in {1..40}; do
+            curl -s http://localhost:3000 > /dev/null && echo "API OK" && exit 0
+            sleep 2
+          done
+          echo "API failed" && docker compose logs && exit 1
 
-      # 5. Playwright tests dans Docker
+      # ======================
+      # 5. RUN PLAYWRIGHT TESTS
+      # ======================
       - name: Run Playwright tests
         run: docker compose -f docker-compose.ci.yml run tests
 
-      # 6. Cleanup
+      # ======================
+      # 6. CLEANUP
+      # ======================
       - name: Stop containers
         if: always()
         run: docker compose -f docker-compose.ci.yml down

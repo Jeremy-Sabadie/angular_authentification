@@ -2,15 +2,9 @@ version: "3.9"
 
 services:
 
-  api:
-    image: node:20
-    working_dir: /app
-    volumes:
-      - .:/app
-    command: npx json-server db.json --host 0.0.0.0 --port 3000
-    ports:
-      - "3000:3000"
-
+  # ======================
+  # FRONT ANGULAR (NGINX)
+  # ======================
   frontend:
     build:
       context: .
@@ -19,13 +13,41 @@ services:
       - "4200:80"
     depends_on:
       - api
+    networks:
+      - app-network
 
+  # ======================
+  # API MOCK JSON SERVER
+  # ======================
+  api:
+    image: node:18
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: npx json-server db.json --host 0.0.0.0 --port 3000
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+  # ======================
+  # PLAYWRIGHT TESTS
+  # ======================
   tests:
     image: mcr.microsoft.com/playwright:v1.49.0-jammy
     working_dir: /app
     volumes:
-      - .:/app
+      - ./:/app
     depends_on:
       - frontend
       - api
+    environment:
+      - BASE_URL=http://frontend
+      - API_URL=http://api:3000
     command: npx playwright test
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
