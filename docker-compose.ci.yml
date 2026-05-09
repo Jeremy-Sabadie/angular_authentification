@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+
+  api:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: npx json-server db.json --host 0.0.0.0 --port 3000
+    ports:
+      - "3000:3000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+
+  tests:
+    image: mcr.microsoft.com/playwright:v1.49.0-jammy
+    working_dir: /app
+    volumes:
+      - .:/app
+    depends_on:
+      - frontend
+      - api
+    command: npx playwright test
