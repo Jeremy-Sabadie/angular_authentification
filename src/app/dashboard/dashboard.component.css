@@ -29,9 +29,31 @@
   color: #64748b;
 }
 
+.topbar-user {
+  font-size: 0.95rem;
+  color: #475569;
+  align-self: center;
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .toggle-btn {
   border: none;
   background: #0f172a;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.logout-btn {
+  border: none;
+  background: #dc2626;
   color: white;
   padding: 12px 18px;
   border-radius: 10px;
@@ -218,7 +240,7 @@ tbody tr:hover {
   font-weight: 700;
 }
 
-.save {
+.primary {
   background: #2563eb;
   color: white;
 }
@@ -240,7 +262,12 @@ tbody tr:hover {
     align-items: stretch;
   }
 
-  .toggle-btn {
+  .topbar-actions {
+    width: 100%;
+  }
+
+  .toggle-btn,
+  .logout-btn {
     width: 100%;
   }
 

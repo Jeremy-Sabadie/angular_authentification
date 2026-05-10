@@ -1,51 +1,48 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures/auth.fixture';
 
-test('CRUD matériels', async ({ page }) => {
-  await page.goto('http://localhost:4200');
-
-  // LOGIN
-  await page.fill('input[formcontrolname="email"]', 'user1@example.com');
-
-  await page.fill('input[formcontrolname="password"]', 'pass1234');
-
-  await page.click('button[type="submit"]');
-
+test('CRUD matériels', async ({ loggedInPage: page }) => {
   // =========================
   // CREATE
   // =========================
+  const createResp = page.waitForResponse(
+    r => r.url().includes('/materiels') && r.request().method() === 'POST',
+  );
 
-  await page.fill('input[formcontrolname="serialNumber"]', 'PW-TEST-001');
+  await page.getByTestId('create-serial-number').fill('PW-TEST-001');
+  await page.getByTestId('create-date-mise-en-service').fill('2026-05-08');
+  await page.getByTestId('create-date-fin-garantie').fill('2028-05-08');
+  await page.getByTestId('create-btn').click();
 
-  await page.fill('input[formcontrolname="dateMiseEnService"]', '2026-05-08');
-
-  await page.fill('input[formcontrolname="dateFinGarantie"]', '2028-05-08');
-
-  await page.click('.add-btn');
-
-  await expect(page.locator('table')).toContainText('PW-TEST-001');
+  await createResp;
+  await page.waitForSelector('.swal2-container', { state: 'hidden' });
+  await expect(page.getByTestId('materials-table')).toContainText('PW-TEST-001');
 
   // =========================
   // UPDATE
   // =========================
+  const updateResp = page.waitForResponse(
+    r => r.url().includes('/materiels') && r.request().method() === 'PUT',
+  );
 
-  await page.locator('.edit').last().click();
+  await page.getByTestId('edit-btn').last().click();
+  await page.getByTestId('modal-serial-number').fill('PW-UPDATED');
+  await page.getByTestId('modal-save').click();
+  await page.locator('.swal2-confirm').click();
 
-  await page.fill('.modal input[formcontrolname="serialNumber"]', 'PW-UPDATED');
-
-  await page.click('.primary');
-
-  // confirmation sweetalert
-  await page.click('.swal2-confirm');
-
-  await expect(page.locator('table')).toContainText('PW-UPDATED');
+  await updateResp;
+  await page.waitForSelector('.swal2-container', { state: 'hidden' });
+  await expect(page.getByTestId('materials-table')).toContainText('PW-UPDATED');
 
   // =========================
   // DELETE
   // =========================
+  const deleteResp = page.waitForResponse(
+    r => r.url().includes('/materiels') && r.request().method() === 'DELETE',
+  );
 
-  await page.locator('.delete').last().click();
+  await page.getByTestId('delete-btn').last().click();
+  await page.locator('.swal2-confirm').click();
 
-  await page.click('.swal2-confirm');
-
-  await expect(page.locator('table')).not.toContainText('PW-UPDATED');
+  await deleteResp;
+  await expect(page.getByTestId('materials-table')).not.toContainText('PW-UPDATED');
 });

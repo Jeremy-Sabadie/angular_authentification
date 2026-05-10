@@ -7,9 +7,14 @@
       <p>Ajoutez, modifiez et supprimez les équipements</p>
     </div>
 
-    <button class="toggle-btn" (click)="toggleList()">
-      {{ showList ? 'Masquer la liste' : 'Afficher la liste' }}
-    </button>
+    <span class="topbar-user" data-testid="topbar-user">Bonjour {{ currentUser?.email }}</span>
+
+    <div class="topbar-actions">
+      <button class="toggle-btn" (click)="toggleList()">
+        {{ showList ? 'Masquer la liste' : 'Afficher la liste' }}
+      </button>
+      <button class="logout-btn" (click)="logout()">Déconnexion</button>
+    </div>
   </div>
 
   <!-- FORMULAIRE AJOUT -->
@@ -26,23 +31,23 @@
 
         <div class="field">
           <label>Numéro de série</label>
-          <input type="text" formControlName="serialNumber" placeholder="Ex : SN-2026-001" />
+          <input type="text" formControlName="serialNumber" data-testid="create-serial-number" placeholder="Ex : SN-2026-001" />
         </div>
 
         <div class="field">
           <label>Date mise en service</label>
-          <input type="date" formControlName="dateMiseEnService" />
+          <input type="date" formControlName="dateMiseEnService" data-testid="create-date-mise-en-service" />
         </div>
 
         <div class="field">
           <label>Date fin garantie</label>
-          <input type="date" formControlName="dateFinGarantie" />
+          <input type="date" formControlName="dateFinGarantie" data-testid="create-date-fin-garantie" />
         </div>
 
       </div>
 
       <div class="actions">
-        <button type="submit" class="add-btn" [disabled]="form.invalid">
+        <button type="submit" class="add-btn" data-testid="create-btn" [disabled]="form.invalid">
           Ajouter le matériel
         </button>
       </div>
@@ -53,7 +58,7 @@
   <!-- TABLEAU -->
   <div class="table-card" *ngIf="showList">
 
-    <table>
+    <table data-testid="materials-table">
       <thead>
         <tr>
           <th>Serial</th>
@@ -70,8 +75,8 @@
           <td>{{ m.dateFinGarantie }}</td>
 
           <td class="btns">
-            <button class="edit" (click)="openEditModal(m)">Modifier</button>
-            <button class="delete" (click)="delete(m.id!)">Supprimer</button>
+            <button class="edit" data-testid="edit-btn" (click)="openEditModal(m)">Modifier</button>
+            <button class="delete" data-testid="delete-btn" (click)="delete(m.id!)">Supprimer</button>
           </td>
         </tr>
       </tbody>
@@ -80,7 +85,7 @@
   </div>
 
   <!-- MODAL MODIFICATION -->
-  <div class="modal" *ngIf="showModal">
+  <div class="modal" *ngIf="showModal" data-testid="modal">
 
     <div class="modal-box">
 
@@ -90,24 +95,22 @@
 
         <div class="field">
           <label>Numéro de série</label>
-          <input type="text" formControlName="serialNumber" />
+          <input type="text" formControlName="serialNumber" data-testid="modal-serial-number" />
         </div>
 
         <div class="field">
           <label>Date mise en service</label>
-          <input type="date" formControlName="dateMiseEnService" />
+          <input type="date" formControlName="dateMiseEnService" data-testid="modal-date-mise-en-service" />
         </div>
 
         <div class="field">
           <label>Date fin garantie</label>
-          <input type="date" formControlName="dateFinGarantie" />
+          <input type="date" formControlName="dateFinGarantie" data-testid="modal-date-fin-garantie" />
         </div>
 
         <div class="modal-actions">
-          <button type="submit" class="save">Enregistrer</button>
-          <button type="button" class="cancel" (click)="closeModal()">
-            Annuler
-          </button>
+          <button type="submit" class="primary" data-testid="modal-save">Enregistrer</button>
+          <button type="button" class="cancel" (click)="closeModal()">Annuler</button>
         </div>
 
       </form>

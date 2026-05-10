@@ -5,18 +5,17 @@
   <div class="form-group">
     <label for="email">Adresse email</label>
 
-    <input id="email" type="email" formControlName="email" [class.invalid]="email?.invalid && email?.touched" />
+    <input
+      id="email"
+      type="email"
+      formControlName="email"
+      data-testid="login-email"
+      [class.invalid]="email?.invalid && email?.touched"
+    />
 
     <small class="error" *ngIf="email?.invalid && email?.touched">
-
-      <span *ngIf="email?.errors?.['required']">
-        Email requis
-      </span>
-
-      <span *ngIf="email?.errors?.['email']">
-        Format invalide
-      </span>
-
+      <span *ngIf="email?.errors?.['required']">Email requis</span>
+      <span *ngIf="email?.errors?.['email']">Format invalide</span>
     </small>
   </div>
 
@@ -25,39 +24,34 @@
     <label for="password">Mot de passe</label>
 
     <div class="password-wrapper">
-
-      <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
-        [class.invalid]="password?.invalid && password?.touched" />
+      <input
+        id="password"
+        [type]="showPassword ? 'text' : 'password'"
+        formControlName="password"
+        data-testid="login-password"
+        [class.invalid]="password?.invalid && password?.touched"
+      />
 
       <button type="button" class="eye-btn" (click)="showPassword = !showPassword">
         {{ showPassword ? '🙈' : '👁️' }}
       </button>
-
     </div>
 
     <small class="error" *ngIf="password?.invalid && password?.touched">
-
-      <span *ngIf="password?.errors?.['required']">
-        Mot de passe requis
-      </span>
-
-      <span *ngIf="password?.errors?.['minlength']">
-        Minimum 6 caractères
-      </span>
-
+      <span *ngIf="password?.errors?.['required']">Mot de passe requis</span>
+      <span *ngIf="password?.errors?.['minlength']">Minimum 6 caractères</span>
     </small>
   </div>
 
+  <!-- ERREUR GLOBALE -->
+  <div class="error-message" data-testid="login-error" *ngIf="loginError">{{ loginError }}</div>
+
   <!-- ACTIONS -->
   <div class="buttons">
+    <button type="button" class="cancel" (click)="onCancel()">Annuler</button>
 
-    <button type="button" class="cancel" (click)="onCancel()">
-      Annuler
-    </button>
-
-    <button type="submit" class="submit" [disabled]="isLoading">
+    <button type="submit" class="submit" data-testid="login-submit" [disabled]="isLoading">
       {{ isLoading ? 'Connexion...' : 'Se connecter' }}
     </button>
-
   </div>
 </form>

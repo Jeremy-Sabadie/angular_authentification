@@ -55,10 +55,22 @@
       "id": "Tz0uARmrkoQ"
     },
     {
-      "serialNumber": "SN-69",
-      "dateMiseEnService": "2026-04-26",
-      "dateFinGarantie": "2026-04-30",
-      "id": "s9XHYdGNjVU"
+      "serialNumber": "SN-69%%",
+      "dateMiseEnService": "2026-05-08",
+      "dateFinGarantie": "2026-05-09",
+      "id": "YgSXqQaPW38"
+    },
+    {
+      "serialNumber": "PW-TEST-001",
+      "dateMiseEnService": "2026-05-08",
+      "dateFinGarantie": "2028-05-08",
+      "id": "8C88Y0eVVI8"
+    },
+    {
+      "serialNumber": "PW-TEST-001",
+      "dateMiseEnService": "2026-05-08",
+      "dateFinGarantie": "2028-05-08",
+      "id": "fI4BEC3I3tg"
     }
   ],
   "users": [

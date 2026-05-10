@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 export interface Materiel {
   id?: number;
@@ -13,7 +14,7 @@ export interface Materiel {
 })
 export class MaterielsService {
   private http = inject(HttpClient);
-  private url = 'http://localhost:3000/materiels';
+  private url = `${environment.apiUrl}/materiels`;
 
   getAll() {
     return this.http.get<Materiel[]>(this.url);

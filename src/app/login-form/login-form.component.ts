@@ -7,9 +7,10 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { inject } from '@angular/core';
 import Swal from 'sweetalert2';
 
-import { AuthServiceService } from '../auth-service.service';
+import { AuthServiceService, User } from '../auth-service.service';
 
 @Component({
   selector: 'app-login-form',
@@ -19,19 +20,16 @@ import { AuthServiceService } from '../auth-service.service';
   styleUrls: ['./login-form.component.css'],
 })
 export class LoginFormComponent {
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthServiceService);
+  private router = inject(Router);
+
   loginForm: FormGroup;
-
-  // évite double clic pendant requête
   isLoading = false;
-
-  // permet d'afficher / masquer le mot de passe
   showPassword = false;
+  loginError: string | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthServiceService,
-    private router: Router,
-  ) {
+  constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -53,16 +51,16 @@ export class LoginFormComponent {
     }
 
     this.isLoading = true;
+    this.loginError = null;
 
-    const email = this.loginForm.value.email;
-    const password = this.loginForm.value.password;
+    const { email, password } = this.loginForm.value;
 
-    this.authService.getConnexionElements(email, password).subscribe({
-      next: (users: any) => {
+    this.authService.login(email, password).subscribe({
+      next: (users: User[]) => {
         this.isLoading = false;
 
         if (users.length > 0) {
-          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('user', JSON.stringify(users[0]));
 
           Swal.fire({
             icon: 'success',
@@ -74,11 +72,7 @@ export class LoginFormComponent {
             this.router.navigate(['/dashboard']);
           });
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Connexion refusée',
-            text: 'Email ou mot de passe incorrect',
-          });
+          this.loginError = 'Email ou mot de passe incorrect';
         }
       },
 

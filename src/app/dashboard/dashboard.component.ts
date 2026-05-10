@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { MaterielsService, Materiel } from '../smateriels.service';
 import {
   FormBuilder,
@@ -17,21 +18,22 @@ import Swal from 'sweetalert2';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
+  private service = inject(MaterielsService);
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+
   materiels: Materiel[] = [];
-
   form: FormGroup;
-
   showList = true;
-
-  // modal edit
   showModal = false;
   currentId: number | null = null;
+  currentUser: { email: string } | null = null;
 
-  constructor(
-    private service: MaterielsService,
-    private fb: FormBuilder,
-  ) {
-    // formulaire unique utilisé pour CREATE + EDIT
+  constructor() {
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      this.currentUser = JSON.parse(stored);
+    }
     this.form = this.fb.group({
       serialNumber: ['', Validators.required],
       dateMiseEnService: ['', Validators.required],
@@ -64,7 +66,6 @@ export class DashboardComponent implements OnInit {
 
     this.service.create(this.form.value).subscribe(() => {
       this.loadMateriels();
-
       this.form.reset();
 
       Swal.fire({
@@ -81,9 +82,7 @@ export class DashboardComponent implements OnInit {
   // =========================
   openEditModal(m: Materiel) {
     this.currentId = m.id ?? null;
-
     this.form.patchValue(m);
-
     this.showModal = true;
   }
 
@@ -142,5 +141,13 @@ export class DashboardComponent implements OnInit {
         });
       }
     });
+  }
+
+  // =========================
+  // AUTH
+  // =========================
+  logout() {
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
   }
 }
