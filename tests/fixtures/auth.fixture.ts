@@ -1,4 +1,5 @@
 import { test as base, expect, Page } from '@playwright/test';
+import { login } from '../utils/auth';
 
 type Fixtures = {
   loggedInPage: Page;
@@ -6,13 +7,14 @@ type Fixtures = {
 
 export const test = base.extend<Fixtures>({
   loggedInPage: async ({ page }, use) => {
-    await page.goto('/login');
+    // 🔐 Login centralisé
+    await login(page);
 
-    await page.getByTestId('login-email').fill('user1@example.com');
-    await page.getByTestId('login-password').fill('password123');
-    await page.getByTestId('login-submit').click();
+    // ✅ Attente robuste (évite waitForURL bloqué)
+    await expect(page).toHaveURL(/dashboard/);
 
-    await page.waitForURL('**/dashboard');
+    // Optionnel mais utile pour stabilité CI
+    await expect(page.getByTestId('materials-table')).toBeVisible();
 
     await use(page);
   },

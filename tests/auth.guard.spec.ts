@@ -1,11 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { login } from './fixtures/auth.fixture';
+import { login } from './utils/auth';
 
 test.describe('Protection des routes', () => {
   test('Accès dashboard refusé sans authentification', async ({ page }) => {
     await page.goto('/dashboard');
 
-    await expect(page).not.toHaveURL(/dashboard/);
+    // Attendre la redirection réelle du guard Angular
+    await page.waitForURL(/login|\/$/);
+
     await expect(page.getByTestId('login-email')).toBeVisible();
     await expect(page.getByTestId('login-password')).toBeVisible();
   });
