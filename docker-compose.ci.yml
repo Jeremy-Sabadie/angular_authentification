@@ -24,4 +24,4 @@ services:
       - .:/app
     depends_on:
       - frontend
-    command: npx playwright test
+    command: sh -c "npm ci && npx playwright install && npx playwright test"
