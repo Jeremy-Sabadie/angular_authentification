@@ -4,10 +4,11 @@
 - name: Wait API
   run: |
     for i in {1..40}; do
-      curl -s http://localhost:3000 && exit 0
+      curl -s http://localhost:3000 && echo "API OK" && exit 0
       sleep 2
     done
+    echo "API failed"
     exit 1
 
-- name: Run Playwright
+- name: Run Playwright tests
   run: npx playwright test
