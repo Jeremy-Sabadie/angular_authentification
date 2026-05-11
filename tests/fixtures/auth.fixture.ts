@@ -6,15 +6,13 @@ type Fixtures = {
 
 export const test = base.extend<Fixtures>({
   loggedInPage: async ({ page }, use) => {
-    await page.goto('/');
+    await page.goto('/login');
 
     await page.getByTestId('login-email').fill('user1@example.com');
-    await page.getByTestId('login-password').fill('pass1234');
+    await page.getByTestId('login-password').fill('password123');
+    await page.getByTestId('login-submit').click();
 
-    await Promise.all([
-      page.waitForResponse((r) => r.url().includes('/users')),
-      page.getByTestId('login-submit').click(),
-    ]);
+    await page.waitForURL('**/dashboard');
 
     await use(page);
   },
