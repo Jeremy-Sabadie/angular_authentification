@@ -1,49 +1,28 @@
 name: CI
 
-on:
-  push:
-  pull_request:
+on: [push]
 
 jobs:
-  e2e:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright
-        run: npx playwright install --with-deps
+      - name: Start Angular app
+        run: npm start &
 
-      - name: Start Docker stack
-        run: docker compose -f docker-compose.ci.yml up -d --build
-
-      - name: Wait for API
-        run: |
-          for i in {1..40}; do
-            if curl -s http://localhost:3000 > /dev/null; then
-              echo "API OK"
-              exit 0
-            fi
-            sleep 2
-          done
-
-          echo "API failed"
-          docker compose -f docker-compose.ci.yml logs
-          exit 1
+      - name: Wait for server
+        run: npx wait-on http://localhost:4200
 
       - name: Run Playwright tests
         run: npx playwright test
-
-      - name: Stop containers
-        if: always()
-        run: docker compose -f docker-compose.ci.yml down

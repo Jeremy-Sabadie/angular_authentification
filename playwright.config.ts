@@ -1,11 +1,9 @@
-/// <reference types="node" />
-
 import { defineConfig, devices } from '@playwright/test';
 
 const CI = (globalThis as any).process?.env?.CI === 'true';
 
 export default defineConfig({
-  testDir: './e2e',
+  testDir: './tests',
 
   forbidOnly: CI,
   retries: CI ? 2 : 0,
