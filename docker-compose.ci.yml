@@ -16,3 +16,12 @@ services:
       - "4200:80"
     depends_on:
       - json-server
+
+  tests:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - .:/app
+    depends_on:
+      - frontend
+    command: npx playwright test
