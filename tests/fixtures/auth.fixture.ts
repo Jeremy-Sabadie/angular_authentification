@@ -11,10 +11,7 @@ export const test = base.extend<Fixtures>({
     await page.getByTestId('login-email').fill('user1@example.com');
     await page.getByTestId('login-password').fill('pass1234');
 
-    await Promise.all([
-      page.waitForResponse((r) => r.url().includes('/users')),
-      page.getByTestId('login-submit').click(),
-    ]);
+    await page.getByTestId('login-submit').click();
 
     await use(page);
   },
