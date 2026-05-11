@@ -1,14 +1,51 @@
-- name: Start stack
-  run: docker compose -f docker-compose.ci.yml up -d --build
+name: CI
 
-- name: Wait API
-  run: |
-    for i in {1..40}; do
-      curl -s http://localhost:3000 && echo "API OK" && exit 0
-      sleep 2
-    done
-    echo "API failed"
-    exit 1
+on:
+  push:
+  pull_request:
 
-- name: Run Playwright tests
-  run: npx playwright test
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: Start stack (Docker)
+        run: docker compose -f docker-compose.ci.yml up -d --build
+
+      - name: Wait API (json-server)
+        run: |
+          echo "Waiting API..."
+
+          for i in {1..40}; do
+            if curl -s http://localhost:3000 > /dev/null; then
+              echo "API OK"
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "API failed"
+          docker compose -f docker-compose.ci.yml logs
+          exit 1
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Stop containers
+        if: always()
+        run: docker compose -f docker-compose.ci.yml down
