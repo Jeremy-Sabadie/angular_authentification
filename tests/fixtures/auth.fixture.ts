@@ -1,15 +1,23 @@
-import { Page, Response } from '@playwright/test';
+import { test as base, expect, Page } from '@playwright/test';
 
-export async function login(page: Page): Promise<void> {
-  await page.goto('/');
+type Fixtures = {
+  loggedInPage: Page;
+};
 
-  await page.getByTestId('login-email').fill('user1@example.com');
-  await page.getByTestId('login-password').fill('pass1234');
+export const test = base.extend<Fixtures>({
+  loggedInPage: async ({ page }, use) => {
+    await page.goto('/');
 
-  await Promise.all([
-    page.waitForResponse(
-      (r: Response) => r.url().includes('/users') && r.status() === 200,
-    ),
-    page.getByTestId('login-submit').click(),
-  ]);
-}
+    await page.getByTestId('login-email').fill('user1@example.com');
+    await page.getByTestId('login-password').fill('pass1234');
+
+    await Promise.all([
+      page.waitForResponse((r) => r.url().includes('/users')),
+      page.getByTestId('login-submit').click(),
+    ]);
+
+    await use(page);
+  },
+});
+
+export { expect };
