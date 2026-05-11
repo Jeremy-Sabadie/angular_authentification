@@ -1,53 +1,27 @@
 version: "3.9"
 
 services:
+  api:
+    build:
+      context: ./backend
+    container_name: api-ci
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: test
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
-  # ======================
-  # FRONT ANGULAR (NGINX)
-  # ======================
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: frontend-ci
     ports:
       - "4200:80"
     depends_on:
-      - api
-    networks:
-      - app-network
-
-  # ======================
-  # API MOCK JSON SERVER
-  # ======================
-  api:
-    image: node:18
-    working_dir: /app
-    volumes:
-      - ./:/app
-    command: sh -c "npm install && npx json-server db.json --host 0.0.0.0 --port 3000"
-    ports:
-      - "3000:3000"
-    networks:
-      - app-network
-
-  # ======================
-  # PLAYWRIGHT TESTS (CI FIX)
-  # ======================
-  tests:
-    image: mcr.microsoft.com/playwright:v1.49.0-jammy
-    working_dir: /app
-    volumes:
-      - ./:/app
-    depends_on:
-      - frontend
-      - api
-    environment:
-      BASE_URL: http://frontend
-      API_URL: http://api:3000
-    command: sh -c "npm install && npx playwright install --with-deps && npx playwright test"
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
+      api:
+        condition: service_healthy
