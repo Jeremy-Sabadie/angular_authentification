@@ -1,27 +1,18 @@
-version: "3.9"
-
 services:
-  api:
-    build:
-      context: ./backend
-    container_name: api-ci
+  json-server:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - ./data:/app/data
+    command: npx json-server --watch data/db.json --host 0.0.0.0 --port 3000
     ports:
       - "3000:3000"
-    environment:
-      NODE_ENV: test
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
 
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: frontend-ci
     ports:
       - "4200:80"
     depends_on:
-      api:
-        condition: service_healthy
+      - json-server
