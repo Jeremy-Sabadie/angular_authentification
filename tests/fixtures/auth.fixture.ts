@@ -7,13 +7,15 @@ type Fixtures = {
 
 export const test = base.extend<Fixtures>({
   loggedInPage: async ({ page }, use) => {
-    // 🔐 Login centralisé
+    await page.goto('/');
+
+    // 🔐 Login
     await login(page);
 
-    // ✅ Attente robuste (évite waitForURL bloqué)
-    await expect(page).toHaveURL(/dashboard/);
+    // ⏱️ Attente navigation réelle (plus fiable que toHaveURL direct)
+    await page.waitForURL('**/dashboard', { timeout: 10000 });
 
-    // Optionnel mais utile pour stabilité CI
+    // ✅ Vérification dashboard stable
     await expect(page.getByTestId('materials-table')).toBeVisible();
 
     await use(page);
