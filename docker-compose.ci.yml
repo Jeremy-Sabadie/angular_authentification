@@ -29,6 +29,7 @@ services:
     working_dir: /app
     volumes:
       - .:/app
+      - /app/node_modules
     environment:
       - BASE_URL=http://frontend:80
       - CI=true
