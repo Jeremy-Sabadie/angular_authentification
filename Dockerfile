@@ -11,7 +11,8 @@ RUN npm run build
 
 FROM nginx:alpine
 
-COPY --from=build /app/dist/authentification-tp/browser /usr/share/nginx/html
+# 🔥 sécurité CI : fallback si "browser" n'existe pas
+COPY --from=build /app/dist/authentification-tp /usr/share/nginx/html
 
 EXPOSE 80
 

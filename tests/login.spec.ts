@@ -7,10 +7,10 @@ test.describe('Authentification', () => {
     await page.getByTestId('login-email').fill('user1@example.com');
     await page.getByTestId('login-password').fill('pass1234');
 
-    await page.getByTestId('login-submit').click();
-
-    // ✅ attente navigation stable
-    await page.waitForURL('**/dashboard', { timeout: 10000 });
+    await Promise.all([
+      page.waitForURL('**/dashboard'),
+      page.getByTestId('login-submit').click(),
+    ]);
 
     await expect(page).toHaveURL(/dashboard/);
     await expect(page.getByTestId('topbar-user')).toContainText('Bonjour');
@@ -24,14 +24,11 @@ test.describe('Authentification', () => {
 
     await page.getByTestId('login-submit').click();
 
-    // ⚠️ on attend stabilisation UI
-    await expect(page.getByTestId('login-error')).toBeVisible({
-      timeout: 5000,
-    });
-
-    await expect(page).not.toHaveURL(/dashboard/);
+    await expect(page.getByTestId('login-error')).toBeVisible();
     await expect(page.getByTestId('login-error')).toContainText(
       'Email ou mot de passe incorrect',
     );
+
+    await expect(page).not.toHaveURL(/dashboard/);
   });
 });

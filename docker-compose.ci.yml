@@ -1,3 +1,4 @@
+# docker-compose.ci.yml
 services:
   json-server:
     image: node:20
@@ -7,6 +8,11 @@ services:
     command: npx json-server --watch db.json --host 0.0.0.0 --port 3000
     ports:
       - "3000:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   frontend:
     build:
@@ -15,13 +21,20 @@ services:
     ports:
       - "4200:80"
     depends_on:
-      - json-server
+      json-server:
+        condition: service_healthy
 
   tests:
-    image: node:20
+    image: mcr.microsoft.com/playwright:v1.54.1-jammy
     working_dir: /app
     volumes:
       - .:/app
     depends_on:
       - frontend
-    command: sh -c "npm ci && npx playwright install && npx playwright test"
+    command: >
+      sh -c "
+        npm ci &&
+        npx playwright install --with-deps &&
+        npx wait-on http://frontend:80 &&
+        npx playwright test
+      "

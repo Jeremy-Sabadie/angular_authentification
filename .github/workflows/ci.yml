@@ -1,3 +1,4 @@
+# .github/workflows/ci.yml
 name: Angular Docker Playwright CI
 
 on:
@@ -9,49 +10,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       # ======================
-      # 1. CHECKOUT CODE
+      # 1. CODE
       # ======================
       - name: Checkout repository
         uses: actions/checkout@v4
 
       # ======================
-      # 2. BUILD + START DOCKER
+      # 2. START DOCKER STACK
       # ======================
       - name: Build and start services
         run: docker compose -f docker-compose.ci.yml up --build -d
 
       # ======================
-      # 3. WAIT API (json-server)
+      # 3. WAIT FRONTEND
+      # ======================
+      - name: Wait for frontend
+        run: |
+          echo "Waiting frontend..."
+          for i in {1..40}; do
+            curl -s http://localhost:4200 > /dev/null && echo "Frontend ready" && exit 0
+            sleep 2
+          done
+          echo "Frontend failed" && docker compose logs && exit 1
+
+      # ======================
+      # 4. WAIT API
       # ======================
       - name: Wait for API
         run: |
           echo "Waiting API..."
           for i in {1..40}; do
-            curl -s http://localhost:3000 > /dev/null && echo "API OK" && exit 0
+            curl -s http://localhost:3000 > /dev/null && echo "API ready" && exit 0
             sleep 2
           done
-          echo "API failed"
-          docker compose logs
-          exit 1
+          echo "API failed" && docker compose logs && exit 1
 
       # ======================
-      # 4. WAIT FRONTEND (Angular)
-      # ======================
-      - name: Wait for Angular frontend
-        run: |
-          echo "Waiting frontend..."
-          for i in {1..60}; do
-            curl -s http://localhost:4200 > /dev/null && echo "Frontend OK" && exit 0
-            sleep 2
-          done
-          echo "Frontend failed"
-          docker compose logs
-          exit 1
-
-      # ======================
-      # 5. PLAYWRIGHT TESTS
+      # 5. RUN TESTS
       # ======================
       - name: Run Playwright tests
         run: docker compose -f docker-compose.ci.yml run tests
