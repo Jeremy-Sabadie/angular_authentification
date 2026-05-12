@@ -49,91 +49,36 @@
       "dateFinGarantie": "2024-08-22"
     },
     {
+      "id": "Tz0uARmrkoQ",
       "serialNumber": "SN-10069",
       "dateMiseEnService": "2026-04-26",
-      "dateFinGarantie": "2026-04-29",
-      "id": "Tz0uARmrkoQ"
+      "dateFinGarantie": "2026-04-29"
     },
     {
+      "id": "YgSXqQaPW38",
       "serialNumber": "SN-69%%",
       "dateMiseEnService": "2026-05-08",
-      "dateFinGarantie": "2026-05-09",
-      "id": "YgSXqQaPW38"
+      "dateFinGarantie": "2026-05-09"
     },
     {
+      "id": "8C88Y0eVVI8",
       "serialNumber": "PW-TEST-001",
       "dateMiseEnService": "2026-05-08",
-      "dateFinGarantie": "2028-05-08",
-      "id": "8C88Y0eVVI8"
+      "dateFinGarantie": "2028-05-08"
     },
     {
+      "id": "fI4BEC3I3tg",
       "serialNumber": "PW-TEST-001",
       "dateMiseEnService": "2026-05-08",
-      "dateFinGarantie": "2028-05-08",
-      "id": "fI4BEC3I3tg"
+      "dateFinGarantie": "2028-05-08"
     }
   ],
   "users": [
     {
+      "id": "Was4AaYJYXE",
       "email": "user1@example.com",
       "password": "pass1234",
-      "token": "tok_1a2b3c4d",
-      "id": "Was4AaYJYXE"
-    },
-    {
-      "email": "user2@example.com",
-      "password": "pass2345",
-      "token": "tok_2b3c4d5e",
-      "id": "RuemJGblbms"
-    },
-    {
-      "email": "user3@example.com",
-      "password": "pass3456",
-      "token": "tok_3c4d5e6f",
-      "id": "NVHaQO86t80"
-    },
-    {
-      "email": "user4@example.com",
-      "password": "pass4567",
-      "token": "tok_4d5e6f7g",
-      "id": "zK4twKuwmjY"
-    },
-    {
-      "email": "user5@example.com",
-      "password": "pass5678",
-      "token": "tok_5e6f7g8h",
-      "id": "wILBW1pK7lY"
-    },
-    {
-      "email": "user6@example.com",
-      "password": "pass6789",
-      "token": "tok_6f7g8h9i",
-      "id": "WjlukDVzMYs"
-    },
-    {
-      "email": "user7@example.com",
-      "password": "pass7890",
-      "token": "tok_7g8h9i0j",
-      "id": "NiP6TKf3qGQ"
-    },
-    {
-      "email": "user8@example.com",
-      "password": "pass8901",
-      "token": "tok_8h9i0j1k",
-      "id": "JfL7FU2ayRI"
-    },
-    {
-      "email": "user9@example.com",
-      "password": "pass9012",
-      "token": "tok_9i0j1k2l",
-      "id": "sXc33Tuj9ek"
-    },
-    {
-      "email": "user10@example.com",
-      "password": "pass0123",
-      "token": "tok_0j1k2l3m",
-      "id": "EIsWY5NXddM"
+      "token": "tok_1a2b3c4d"
     }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+  ]
 }
