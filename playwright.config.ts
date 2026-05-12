@@ -10,7 +10,7 @@ export default defineConfig({
   workers: CI ? 1 : undefined,
 
   use: {
-    baseURL: 'http://localhost:4200',
+    baseURL: (globalThis as any).process?.env?.['BASE_URL'] || 'http://localhost:4200',
     headless: true,
   },
 

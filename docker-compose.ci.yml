@@ -8,7 +8,6 @@ services:
     ports:
       - "3000:3000"
     healthcheck:
-      # FIX MINIMAL : endpoint toujours disponible dans json-server
       test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
       interval: 5s
       timeout: 3s
@@ -29,12 +28,20 @@ services:
     working_dir: /app
     volumes:
       - .:/app
+    environment:
+      - BASE_URL=http://frontend:80
+      - CI=true
     depends_on:
       - frontend
     command: >
       sh -c "
         npm ci &&
-        npx playwright install --with-deps &&
-        npx wait-on http://frontend:80 &&
+        npx playwright install --with-deps chromium &&
+        echo 'Waiting for frontend...' &&
+        for i in $(seq 1 30); do
+          wget -qO- http://frontend:80 > /dev/null 2>&1 && echo 'Frontend ready' && break;
+          echo \"Attempt $i/30...\";
+          sleep 3;
+        done &&
         npx playwright test
       "
