@@ -1,29 +1,58 @@
+# ============================================================
 # .github/workflows/ci.yml
+# Pipeline CI GitHub Actions pour ce projet Angular.
+#
+# Déclenché à chaque push et pull request sur toutes les branches.
+# Lance l'ensemble de la stack Docker (frontend + API mock + tests)
+# et exécute les tests E2E Playwright en conteneur isolé.
+#
+# Architecture :
+#   ┌─────────────────────────────────────────────┐
+#   │  GitHub Actions Runner (ubuntu-latest)       │
+#   │                                              │
+#   │  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
+#   │  │json-server│  │ frontend │  │  tests   │  │
+#   │  │ :3000    │◄─│ nginx:80 │◄─│Playwright│  │
+#   │  └──────────┘  └──────────┘  └──────────┘  │
+#   └─────────────────────────────────────────────┘
+# ============================================================
+
 name: Angular Docker Playwright CI
 
+# Déclencheurs : push (toutes branches) et pull requests.
 on:
   push:
   pull_request:
 
 jobs:
   test:
+    # Environnement d'exécution fourni par GitHub.
     runs-on: ubuntu-latest
 
     steps:
+
       # ======================
       # 1. CODE
+      # Télécharge le code source du dépôt sur le runner.
+      # actions/checkout@v4 est l'action officielle GitHub.
       # ======================
       - name: Checkout repository
         uses: actions/checkout@v4
 
       # ======================
       # 2. START DOCKER STACK
+      # Lance les trois services en arrière-plan (-d) :
+      # json-server, frontend et tests.
+      # --build force la reconstruction des images à chaque run.
       # ======================
       - name: Build and start services
         run: docker compose -f docker-compose.ci.yml up --build -d
 
       # ======================
       # 3. WAIT FRONTEND
+      # Vérifie que nginx répond sur le port 4200 (hôte).
+      # La boucle tente pendant 80 s max (40 × 2 s) avant d'échouer
+      # et d'afficher les logs Docker pour faciliter le débogage.
       # ======================
       - name: Wait for frontend
         run: |
@@ -36,6 +65,8 @@ jobs:
 
       # ======================
       # 4. WAIT API
+      # Vérifie que json-server répond sur le port 3000 (hôte).
+      # Même logique de retry que pour le frontend.
       # ======================
       - name: Wait for API
         run: |
@@ -48,12 +79,17 @@ jobs:
 
       # ======================
       # 5. RUN TESTS
+      # Lance le conteneur "tests" qui exécute run-e2e.sh :
+      # installation npm + Playwright + attente frontend + npx playwright test.
+      # Le code de sortie du conteneur détermine le succès ou l'échec du job.
       # ======================
       - name: Run Playwright tests
         run: docker compose -f docker-compose.ci.yml run tests
 
       # ======================
       # 6. CLEANUP
+      # Arrête et supprime tous les conteneurs même en cas d'échec
+      # (if: always()) pour libérer les ressources du runner.
       # ======================
       - name: Stop containers
         if: always()

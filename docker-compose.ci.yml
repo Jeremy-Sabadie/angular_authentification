@@ -1,12 +1,39 @@
+# ============================================================
+# docker-compose.ci.yml
+# Orchestre les trois services nécessaires à la CI :
+#   1. json-server  — API REST mock alimentée par db.json
+#   2. frontend     — Application Angular servie par nginx
+#   3. tests        — Runner Playwright (Chromium headless)
+#
+# Les services démarrent dans l'ordre imposé par depends_on +
+# healthchecks, pour éviter que les tests lancent avant que
+# le frontend soit prêt.
+# ============================================================
+
 services:
+
+  # ----------------------------------------------------------
+  # SERVICE 1 : json-server (API mock)
+  # Simule un backend REST à partir du fichier db.json.
+  # Accessible sur le réseau Docker interne via le nom d'hôte
+  # "json-server" et sur l'hôte CI via localhost:3000.
+  # ----------------------------------------------------------
   json-server:
     image: node:20
     working_dir: /app
+    # Monte l'intégralité du projet pour accéder à db.json.
     volumes:
       - .:/app
+    # npx --yes télécharge json-server sans prompt de confirmation.
+    # --host 0.0.0.0 est indispensable pour que les autres
+    # conteneurs du réseau puissent atteindre le service.
     command: npx --yes json-server@0.17.4 --watch db.json --host 0.0.0.0 --port 3000 --quiet
     ports:
       - "3000:3000"
+    # Healthcheck : interroge l'API avec Node.js (pas de wget/curl
+    # dans l'image node:20 par défaut).
+    # start_period: 20s laisse le temps à npx de télécharger
+    # json-server lors du premier lancement.
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/', (r) => process.exit(0)).on('error', () => process.exit(1))"]
       interval: 5s
@@ -14,25 +41,48 @@ services:
       retries: 15
       start_period: 20s
 
+  # ----------------------------------------------------------
+  # SERVICE 2 : frontend (Angular + nginx)
+  # Construit l'image via le Dockerfile du projet, puis sert
+  # les fichiers statiques sur le port 80 (interne) / 4200 (hôte).
+  # Ne démarre qu'une fois json-server déclaré healthy.
+  # ----------------------------------------------------------
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "4200:80"
+    # condition: service_healthy garantit que json-server répond
+    # vraiment avant que nginx serve le frontend.
     depends_on:
       json-server:
         condition: service_healthy
 
+  # ----------------------------------------------------------
+  # SERVICE 3 : tests (Playwright)
+  # Utilise l'image officielle Playwright avec Chromium préinstallé.
+  # Monte le code source pour accéder aux specs et au config.
+  # Le volume anonyme /app/node_modules évite d'écraser les
+  # node_modules installés dans l'image par ceux de l'hôte Windows
+  # (incompatibilité binaire Linux/Windows).
+  # ----------------------------------------------------------
   tests:
     image: mcr.microsoft.com/playwright:v1.54.1-jammy
     working_dir: /app
     volumes:
       - .:/app
+      # Volume anonyme pour isoler node_modules : empêche
+      # l'écrasement des binaires Linux par ceux de l'hôte.
       - /app/node_modules
     environment:
+      # URL de base utilisée par Playwright pour joindre le frontend.
+      # "frontend" est résolu par le DNS interne de Docker Compose.
       - BASE_URL=http://frontend:80
+      # Active le mode CI dans playwright.config.ts (retries, workers).
       - CI=true
     depends_on:
       - frontend
+    # Lance le script d'initialisation qui installe les dépendances
+    # puis attend que le frontend soit prêt avant de lancer les tests.
     command: sh /app/run-e2e.sh
